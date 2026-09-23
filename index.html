@@ -121,9 +121,13 @@
     }
 
     .banner-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      z-index: 1;
     }
 
     .content {
@@ -319,6 +323,37 @@
       margin-top: 5px;
     }
 
+    .credits-box {
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .credits-title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .credit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .credit-tag {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
     @media (max-width: 480px) {
       .social-buttons {
         flex-direction: column;
@@ -373,7 +408,7 @@
         <p>• Busy working a lot.</p>
         <p>• I am very friendly!</p>
         <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
-        <p>• Big gamer and loves foxes 🦊</p>
+        <p>• Big gamer and loves foxes</p>
       </div>
 
       <div class="socials-container">
@@ -394,6 +429,18 @@
         <span>More soon!</span>
         <div class="emoji-accent">
           <img src="emoji3.PNG" alt="Emoji 3" onerror="handleImgError(this, 'emoji3.png')">
+        </div>
+      </div>
+
+      <div class="credits-box">
+        <div class="credits-title">Credits</div>
+        <div class="credit-row">
+          <span>Profile Picture</span>
+          <span class="credit-tag">@idiot07062</span>
+        </div>
+        <div class="credit-row">
+          <span>Emojis</span>
+          <span class="credit-tag">@cruciblestyx</span>
         </div>
       </div>
 
