@@ -144,7 +144,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .profile-header-row {
@@ -230,7 +230,55 @@
       color: var(--text-muted);
     }
 
-    .bio-box {
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--inner-box-border);
+      padding-bottom: 12px;
+      margin-top: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab-btn:hover {
+      background-color: var(--button-hover);
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background-color: var(--btn-view-bg);
+      color: var(--btn-view-text);
+      border-color: var(--btn-view-bg);
+    }
+
+    /* Smooth Fade-Only Tab Transitions */
+    .tab-panel {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tab-panel.active-panel {
+      opacity: 1;
+    }
+
+    .bio-box, .faq-container, .pet-showcase {
       width: 100%;
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
@@ -240,7 +288,7 @@
       line-height: 1.5;
     }
 
-    .bio-box h3 {
+    .bio-box h3, .faq-container h3, .pet-showcase h3 {
       font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -256,19 +304,92 @@
       margin-bottom: 0;
     }
 
+    /* FAQ List */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+
+    .faq-a {
+      color: var(--text-muted);
+      font-size: 0.83rem;
+      line-height: 1.4;
+    }
+
+    /* Pet Gallery Showcase */
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .pet-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pet-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 6px;
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pet-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pet-name {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Socials Grid */
     .socials-container {
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
 
     .social-buttons {
-      display: flex;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
       flex: 1;
     }
 
@@ -276,16 +397,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       background-color: var(--button-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 8px 16px;
+      padding: 8px 12px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 600;
-      flex: 1;
+      letter-spacing: 0.5px;
+      text-align: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .social-btn:hover {
+      background-color: var(--button-hover);
     }
 
     .sound-container {
@@ -365,10 +491,10 @@
 
     @media (max-width: 480px) {
       .social-buttons {
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
-      .social-btn {
-        max-width: 100%;
+      .pet-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -391,6 +517,7 @@
 
     <div class="content">
       
+      <!-- Persistent Header -->
       <div class="profile-header-row">
         <div class="pfp-container">
           <img src="pfp.PNG" alt="Profile" onerror="handleImgError(this, 'pfp.png')">
@@ -412,43 +539,110 @@
         </div>
       </div>
 
-      <div class="bio-box">
-        <h3>About Me</h3>
-        <p>• Busy working a lot.</p>
-        <p>• I am very friendly!</p>
-        <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
-        <p>• Big gamer and loves foxes</p>
+      <!-- Tab Buttons -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="main" onclick="switchTab('main')">Main</button>
+        <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ & Pets</button>
       </div>
 
-      <div class="socials-container">
-        <div class="social-buttons">
-          <a href="https://www.instagram.com/pisttolz?stkn=MWkwcDNicGl0YTkxZA%3D%3D&utm_source=qr" target="_blank" class="social-btn">📷 INSTAGRAM</a>
+      <!-- TAB 1: MAIN -->
+      <div id="tab-main" class="tab-panel active-panel" style="display: flex;">
+        <div class="bio-box">
+          <h3>About Me</h3>
+          <p>• Busy working a lot.</p>
+          <p>• I am very friendly!</p>
+          <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
+          <p>• Big gamer and loves foxes</p>
         </div>
-        <div class="emoji-accent" style="margin-left: 10px;">
-          <img src="emoji2.PNG" alt="Emoji 2" onerror="handleImgError(this, 'emoji2.png')">
+
+        <div class="socials-container">
+          <div class="social-buttons">
+            <a href="https://www.instagram.com/pisttolz?stkn=MWkwcDNicGl0YTkxZA%3D%3D&utm_source=qr" target="_blank" class="social-btn">INSTAGRAM</a>
+            <a href="https://steamcommunity.com/profiles/76561199229884552/" target="_blank" class="social-btn">STEAM</a>
+            <a href="https://profile.playstation.com/Pisttolz" target="_blank" class="social-btn">SONY</a>
+            <a href="https://horizon.meta.com/profile/107941464973803/?hwsh=6yFWudFkMY&utm_source=twilight&utm_medium=SHARE&utm_parent=SHARING&utm_cohort=ORGANIC_UNKNOWN" target="_blank" class="social-btn">VR</a>
+          </div>
+          <div class="emoji-accent" style="margin-left: 6px;">
+            <img src="emoji2.PNG" alt="Emoji 2" onerror="handleImgError(this, 'emoji2.png')">
+          </div>
+        </div>
+
+        <div class="sound-container">
+          <button class="sound-btn" id="soundBtn">Click :3</button>
+        </div>
+
+        <div class="more-soon-container">
+          <span>More soon!</span>
+          <div class="emoji-accent">
+            <img src="emoji3.PNG" alt="Emoji 3" onerror="handleImgError(this, 'emoji3.png')">
+          </div>
+        </div>
+
+        <div class="credits-box">
+          <div class="credits-title">Credits</div>
+          <div class="credit-row">
+            <span>Profile Picture</span>
+            <span class="credit-tag">@idiot07062</span>
+          </div>
+          <div class="credit-row">
+            <span>Emojis</span>
+            <span class="credit-tag">@cruciblestyx</span>
+          </div>
         </div>
       </div>
 
-      <div class="sound-container">
-        <button class="sound-btn" id="soundBtn">Click :3</button>
-      </div>
-
-      <div class="more-soon-container">
-        <span>More soon!</span>
-        <div class="emoji-accent">
-          <img src="emoji3.PNG" alt="Emoji 3" onerror="handleImgError(this, 'emoji3.png')">
+      <!-- TAB 2: FAQ & PETS -->
+      <div id="tab-faq" class="tab-panel">
+        <div class="faq-container">
+          <h3>Frequently Asked Questions</h3>
+          <div class="faq-list">
+            <div class="faq-item">
+              <div class="faq-q">Where are you based?</div>
+              <div class="faq-a">North America</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">How would you describe yourself?</div>
+              <div class="faq-a">Shy, Kind, and always Sleepy.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Are your DMs open for random chats?</div>
+              <div class="faq-a">Sure! I am quite shy though so I might not put off much energy at first.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Can I draw fan art of your Original Characters (OCs)?</div>
+              <div class="faq-a">YES :D</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">What platform do you main?</div>
+              <div class="faq-a">Console</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">What’s your gaming style?</div>
+              <div class="faq-a">Casual, depends on the game though.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Do you have any pets?</div>
+              <div class="faq-a">I have two pets, Toothless and Tipsy.</div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="credits-box">
-        <div class="credits-title">Credits</div>
-        <div class="credit-row">
-          <span>Profile Picture</span>
-          <span class="credit-tag">@idiot07062</span>
-        </div>
-        <div class="credit-row">
-          <span>Emojis</span>
-          <span class="credit-tag">@cruciblestyx</span>
+        <div class="pet-showcase">
+          <h3>🐾 Pet Showcase</h3>
+          <div class="pet-grid">
+            <div class="pet-card">
+              <div class="pet-photo">
+                <img src="toothless.PNG" alt="Toothless" onerror="handleImgError(this, 'toothless.png')">
+              </div>
+              <div class="pet-name">Toothless</div>
+            </div>
+            <div class="pet-card">
+              <div class="pet-photo">
+                <img src="tipsy.PNG" alt="Tipsy" onerror="handleImgError(this, 'tipsy.png')">
+              </div>
+              <div class="pet-name">Tipsy</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -456,8 +650,10 @@
   </div>
 
   <script>
+    // Prevent right clicks
     document.addEventListener('contextmenu', event => event.preventDefault());
 
+    // Enter Button & Overlay
     const enterBtn = document.getElementById('enterBtn');
     const overlay = document.getElementById('overlay');
     const audio = document.getElementById('siteAudio');
@@ -476,6 +672,53 @@
       }, 500);
     });
 
+    // Sequential Clean Fade Tab Switcher
+    let isTransitioning = false;
+
+    function switchTab(tabId) {
+      if (isTransitioning) return;
+
+      const currentPanel = document.querySelector('.tab-panel.active-panel');
+      const targetPanel = document.getElementById(`tab-${tabId}`);
+
+      if (!targetPanel || currentPanel === targetPanel) return;
+
+      isTransitioning = true;
+
+      // Update Tab Button Highlights
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Step 1: Fade out the active panel
+      if (currentPanel) {
+        currentPanel.classList.remove('active-panel');
+
+        // Step 2: Once faded out, hide current panel and reveal target panel
+        setTimeout(() => {
+          currentPanel.style.display = 'none';
+
+          targetPanel.style.display = 'flex';
+          
+          // Trigger browser reflow to ensure smooth fade-in
+          void targetPanel.offsetWidth;
+
+          targetPanel.classList.add('active-panel');
+          isTransitioning = false;
+        }, 200); // Matches the CSS transition duration
+      } else {
+        targetPanel.style.display = 'flex';
+        void targetPanel.offsetWidth;
+        targetPanel.classList.add('active-panel');
+        isTransitioning = false;
+      }
+    }
+
+    // Random Sound FX
     const soundBtn = document.getElementById('soundBtn');
     const sounds = ['sound1.mp3', 'sound2.mp3', 'sound3.mp3'];
     let activeSound = null;
@@ -492,6 +735,7 @@
       activeSound.play().catch(err => console.log("Sound play error:", err));
     });
 
+    // Image fallback handling
     function handleImgError(img, fallbackSrc) {
       if (!img.dataset.triedFallback) {
         img.dataset.triedFallback = "true";
