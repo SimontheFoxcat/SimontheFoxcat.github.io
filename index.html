@@ -278,7 +278,7 @@
       opacity: 1;
     }
 
-    .bio-box, .faq-container, .pet-showcase {
+    .bio-box, .faq-container, .pet-showcase, .contact-container {
       width: 100%;
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
@@ -288,7 +288,7 @@
       line-height: 1.5;
     }
 
-    .bio-box h3, .faq-container h3, .pet-showcase h3 {
+    .bio-box h3, .faq-container h3, .pet-showcase h3, .contact-container h3 {
       font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -412,6 +412,98 @@
 
     .social-btn:hover {
       background-color: var(--button-hover);
+    }
+
+    /* Contact Form Styling */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .form-input, .form-textarea, .form-file {
+      width: 100%;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--btn-view-bg);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-file {
+      padding: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .form-file::file-selector-button {
+      background-color: var(--button-bg);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+
+    .form-file::file-selector-button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .form-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .submit-btn {
+      background-color: var(--btn-view-bg);
+      color: var(--btn-view-text);
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+      margin-top: 6px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
     }
 
     .sound-container {
@@ -543,6 +635,7 @@
       <div class="tab-nav">
         <button class="tab-btn active" data-tab="main" onclick="switchTab('main')">Main</button>
         <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ & Pets</button>
+        <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact Me</button>
       </div>
 
       <!-- TAB 1: MAIN -->
@@ -646,6 +739,52 @@
         </div>
       </div>
 
+      <!-- TAB 3: CONTACT ME -->
+      <div id="tab-contact" class="tab-panel">
+        <div class="contact-container">
+          <h3>Send Me a Message</h3>
+          
+          <form class="contact-form" action="https://formsubmit.co/simonflourez896@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(this)">
+            
+            <!-- Anti-Spam Honeypot Field (hidden from humans) -->
+            <input type="text" name="_honey" style="display:none">
+            
+            <!-- Disable FormSubmit captcha page redirection for smoother experience -->
+            <input type="hidden" name="_captcha" value="true">
+            
+            <!-- Form Fields -->
+            <div class="form-group">
+              <label for="name">Your Name (Optional)</label>
+              <input type="text" id="name" name="Name" class="form-input" placeholder="Anonymous">
+            </div>
+
+            <div class="form-group">
+              <label for="contact_info">Email or Discord @ (Optional)</label>
+              <input type="text" id="contact_info" name="Contact_Info" class="form-input" placeholder="e.g. user@email.com or @username">
+              <span class="form-hint">Include this if you want me to reply!</span>
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject (Optional)</label>
+              <input type="text" id="subject" name="_subject" class="form-input" placeholder="Message subject...">
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" name="Message" class="form-textarea" placeholder="Type your message here..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="attachment">Attachment (Optional)</label>
+              <input type="file" id="attachment" name="Attachment" class="form-file" id="fileInput">
+              <span class="form-hint">Max file size: 25 MB (Gmail limit)</span>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -716,6 +855,25 @@
         targetPanel.classList.add('active-panel');
         isTransitioning = false;
       }
+    }
+
+    // Contact Form Handling (Defaults & File Size Check)
+    function handleFormSubmit(form) {
+      const nameInput = form.querySelector('#name');
+      if (!nameInput.value.trim()) {
+        nameInput.value = 'Anonymous';
+      }
+
+      const fileInput = form.querySelector('#attachment');
+      if (fileInput.files.length > 0) {
+        const fileSizeMB = fileInput.files[0].size / (1024 * 1024);
+        if (fileSizeMB > 25) {
+          alert('File size exceeds Gmail\'s 25 MB limit. Please select a smaller file.');
+          return false;
+        }
+      }
+
+      return true;
     }
 
     // Random Sound FX
