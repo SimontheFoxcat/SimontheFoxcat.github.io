@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#120b07">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Simon's Profile</title>
+  <style>
+    :root {
+      --bg-gradient-start: #23160e;
+      --bg-gradient-end: #120b07;
+      --card-bg: #2a1c14;
+      --card-border: #523a2a;
+      --inner-box-bg: #1d130d;
+      --inner-box-border: #3d2a1d;
+      --text-main: #e8d8c8;
+      --text-muted: #a68f7c;
+      --button-bg: #3d2a1d;
+      --button-hover: #523a2a;
+      --btn-view-bg: #d9b38c;
+      --btn-view-text: #1d130d;
+      --tag-bg: #322117;
+      --tag-border: #473223;
+    }
+
+    html {
+      background-color: #120b07 !important;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #120b07 !important;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-main);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background: radial-gradient(circle, #2d1e14 0%, #120b07 100%);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      touch-action: manipulation;
+    }
+
+    .click-btn {
+      background-color: var(--btn-view-bg);
+      color: var(--btn-view-text);
+      border: none;
+      padding: 16px 36px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .click-btn:active {
+      transform: scale(0.97);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      padding-bottom: 20px;
+    }
+
+    .banner-container {
+      width: 100%;
+      height: 160px;
+      background-color: #3b2a1e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .banner-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .profile-header-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .pfp-container {
+      width: 85px;
+      height: 85px;
+      min-width: 85px;
+      border-radius: 50%;
+      background-color: #4a3729;
+      border: 2px solid var(--card-border);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .pfp-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-section {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-row h1 {
+      font-size: 1.7rem;
+      color: var(--text-main);
+    }
+
+    .emoji-accent {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .emoji-accent img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .header-subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      background-color: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--text-main);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tag span {
+      color: var(--text-muted);
+    }
+
+    .bio-box {
+      width: 100%;
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .bio-box h3 {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .bio-box p {
+      margin-bottom: 6px;
+    }
+
+    .bio-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .socials-container {
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--button-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .sound-container {
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sound-btn {
+      background-color: var(--button-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .sound-btn:hover {
+      background-color: var(--button-hover);
+    }
+
+    .sound-btn:active {
+      transform: scale(0.96);
+    }
+
+    .more-soon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 480px) {
+      .social-buttons {
+        flex-direction: column;
+      }
+      .social-btn {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="no-scroll">
+
+  <audio id="siteAudio" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="overlay">
+    <button class="click-btn" id="enterBtn">Click to View Profile :3</button>
+  </div>
+
+  <div class="container">
+    <div class="banner-container">
+      <img src="banner.JPG" alt="Banner" onerror="handleImgError(this, 'banner.jpg')">
+      <span id="banner-text">BANNER PLACEHOLDER</span>
+    </div>
+
+    <div class="content">
+      
+      <div class="profile-header-row">
+        <div class="pfp-container">
+          <img src="pfp.PNG" alt="Profile" onerror="handleImgError(this, 'pfp.png')">
+        </div>
+
+        <div class="header-section">
+          <div class="title-row">
+            <h1>Simon</h1>
+            <div class="emoji-accent">
+              <img src="emoji1.PNG" alt="Emoji 1" onerror="handleImgError(this, 'emoji1.png')">
+            </div>
+          </div>
+          <div class="header-subtitle">@simon_the_foxcat</div>
+          
+          <div class="meta-tags">
+            <div class="tag"><span>Pronouns:</span> Any</div>
+            <div class="tag"><span>Sexuality:</span> Pansexual</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bio-box">
+        <h3>About Me</h3>
+        <p>• Busy working a lot.</p>
+        <p>• I am very friendly!</p>
+        <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
+        <p>• Big gamer and loves foxes 🦊</p>
+      </div>
+
+      <div class="socials-container">
+        <div class="social-buttons">
+          <a href="https://instagram.com" target="_blank" class="social-btn">📷 INSTAGRAM</a>
+          <a href="https://discord.com" target="_blank" class="social-btn">💬 DISCORD</a>
+        </div>
+        <div class="emoji-accent" style="margin-left: 10px;">
+          <img src="emoji2.PNG" alt="Emoji 2" onerror="handleImgError(this, 'emoji2.png')">
+        </div>
+      </div>
+
+      <div class="sound-container">
+        <button class="sound-btn" id="soundBtn">Click :3</button>
+      </div>
+
+      <div class="more-soon-container">
+        <span>More soon!</span>
+        <div class="emoji-accent">
+          <img src="emoji3.PNG" alt="Emoji 3" onerror="handleImgError(this, 'emoji3.png')">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const enterBtn = document.getElementById('enterBtn');
+    const overlay = document.getElementById('overlay');
+    const audio = document.getElementById('siteAudio');
+
+    enterBtn.addEventListener('click', () => {
+      window.scrollTo(0, 0);
+      document.body.classList.remove('no-scroll');
+
+      audio.play().catch(err => console.log("Audio play blocked:", err));
+
+      overlay.style.opacity = '0';
+      overlay.style.visibility = 'hidden';
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 500);
+    });
+
+    const soundBtn = document.getElementById('soundBtn');
+    const sounds = ['sound1.mp3', 'sound2.mp3', 'sound3.mp3'];
+    let activeSound = null;
+
+    soundBtn.addEventListener('click', () => {
+      const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+      
+      if (activeSound) {
+        activeSound.pause();
+        activeSound.currentTime = 0;
+      }
+      
+      activeSound = new Audio(randomSound);
+      activeSound.play().catch(err => console.log("Sound play error:", err));
+    });
+
+    function handleImgError(img, fallbackSrc) {
+      if (!img.dataset.triedFallback) {
+        img.dataset.triedFallback = "true";
+        img.src = fallbackSrc;
+      } else {
+        img.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
