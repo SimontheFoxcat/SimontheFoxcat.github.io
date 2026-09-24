@@ -18,7 +18,7 @@
       --text-muted: #a68f7c;
       --button-bg: #3d2a1d;
       --button-hover: #523a2a;
-      --btn-view-bg: #d9b38c;
+      --btn-view-bg: #dcb892;
       --btn-view-text: #1d130d;
       --tag-bg: #322117;
       --tag-border: #473223;
@@ -265,7 +265,7 @@
       border-color: var(--btn-view-bg);
     }
 
-    /* Smooth Fade-Only Tab Transitions */
+    /* Tab Panels */
     .tab-panel {
       display: none;
       opacity: 0;
@@ -414,7 +414,7 @@
       background-color: var(--button-hover);
     }
 
-    /* Floating Contact Button & Smooth Physics */
+    /* Floating Contact Button (Square with Rounded Edges & Lighter Swatch Color) */
     .floating-contact-container {
       position: fixed;
       bottom: 25px;
@@ -426,23 +426,23 @@
     .floating-contact-btn {
       width: 58px;
       height: 58px;
-      border-radius: 50%;
-      background-color: var(--card-bg);
+      border-radius: 14px; /* Square with rounded edges */
+      background-color: var(--btn-view-bg); /* Lighter shade from color palette */
       border: 2px solid var(--card-border);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       overflow: hidden;
       padding: 10px;
     }
 
     .floating-contact-btn:hover {
-      transform: scale(1.1);
-      border-color: var(--btn-view-bg);
+      transform: scale(1.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
     }
 
     .floating-contact-btn img {
@@ -451,7 +451,7 @@
       object-fit: contain;
     }
 
-    /* Contact Floating Popup Window */
+    /* Contact Popup Modal */
     .contact-modal {
       position: fixed;
       bottom: 95px;
@@ -837,7 +837,7 @@
     </div>
   </div>
 
-  <!-- FLOATING PERSISTENT CONTACT BUTTON WITH SMOOTH PHYSICS -->
+  <!-- FLOATING PERSISTENT CONTACT BUTTON -->
   <div class="floating-contact-container" id="floatingContainer">
     <div class="floating-contact-btn" id="toggleContactBtn" title="Contact Me">
       <img src="chatIcon.PNG" alt="Contact" onerror="handleImgError(this, 'chatIcon.png')">
@@ -853,7 +853,7 @@
     
     <form class="contact-form" action="https://formsubmit.co/simonflourez896@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(this)">
       
-      <!-- Anti-Spam Honeypot Field -->
+      <!-- Anti-Spam Field -->
       <input type="text" name="_honey" style="display:none">
       <input type="hidden" name="_captcha" value="true">
       
@@ -929,7 +929,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Sequential Clean Fade Tab Switcher
+    // Tab Switcher
     let isTransitioning = false;
 
     function switchTab(tabId) {
@@ -1002,30 +1002,39 @@
       return true;
     }
 
-    // Smooth Physics / LERP Following Lag Effect for Floating Button
+    // Dynamic Physics Drag-Behind & Spring Settle Effect
     const floatingContainer = document.getElementById('floatingContainer');
-    let targetOffsetY = 0;
-    let currentOffsetY = 0;
+    let offsetY = 0;
+    let velocityY = 0;
+    let lastScrollY = window.scrollY;
 
     window.addEventListener('scroll', () => {
-      // Create slight dampening offset when scrolling
-      targetOffsetY = Math.sin(window.scrollY * 0.05) * 6;
+      const currentScroll = window.scrollY;
+      const deltaScroll = currentScroll - lastScrollY;
+      lastScrollY = currentScroll;
+
+      // Impart physical momentum upward/downward based on scroll speed
+      const clampedDelta = Math.max(Math.min(deltaScroll, 60), -60);
+      velocityY -= clampedDelta * 0.35;
     });
 
-    function animateFloatingButton() {
-      // Smooth linear interpolation (LERP)
-      currentOffsetY += (targetOffsetY - currentOffsetY) * 0.08;
-      
-      // Decay target offset back to zero gently
-      targetOffsetY *= 0.95;
+    function animatePhysics() {
+      // Spring physics aiming back towards resting position (0)
+      const stiffness = 0.08;
+      const damping = 0.82;
+
+      const springForce = -stiffness * offsetY;
+      velocityY += springForce;
+      velocityY *= damping;
+      offsetY += velocityY;
 
       if (floatingContainer) {
-        floatingContainer.style.transform = `translateY(${currentOffsetY}px)`;
+        floatingContainer.style.transform = `translateY(${offsetY.toFixed(2)}px)`;
       }
 
-      requestAnimationFrame(animateFloatingButton);
+      requestAnimationFrame(animatePhysics);
     }
-    animateFloatingButton();
+    requestAnimationFrame(animatePhysics);
 
     // Random Sound FX
     const soundBtn = document.getElementById('soundBtn');
