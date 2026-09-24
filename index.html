@@ -278,7 +278,7 @@
       opacity: 1;
     }
 
-    .bio-box, .faq-container, .pet-showcase, .contact-container {
+    .bio-box, .faq-container, .pet-showcase {
       width: 100%;
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
@@ -288,7 +288,7 @@
       line-height: 1.5;
     }
 
-    .bio-box h3, .faq-container h3, .pet-showcase h3, .contact-container h3 {
+    .bio-box h3, .faq-container h3, .pet-showcase h3 {
       font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -414,33 +414,126 @@
       background-color: var(--button-hover);
     }
 
-    /* Contact Form Styling */
+    /* Floating Contact Button & Smooth Physics */
+    .floating-contact-container {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1000;
+      will-change: transform;
+    }
+
+    .floating-contact-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      border: 2px solid var(--card-border);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    .floating-contact-btn:hover {
+      transform: scale(1.1);
+      border-color: var(--btn-view-bg);
+    }
+
+    .floating-contact-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Contact Floating Popup Window */
+    .contact-modal {
+      position: fixed;
+      bottom: 95px;
+      right: 25px;
+      width: calc(100vw - 40px);
+      max-width: 380px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+      z-index: 1001;
+      display: none;
+      opacity: 0;
+      transform: translateY(15px) scale(0.95);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .contact-modal.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--inner-box-border);
+      padding-bottom: 8px;
+    }
+
+    .modal-header h3 {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .close-modal-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .close-modal-btn:hover {
+      color: var(--text-main);
+    }
+
     .contact-form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .form-group label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       font-weight: 600;
     }
 
     .form-input, .form-textarea, .form-file {
       width: 100%;
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
       color: var(--text-main);
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: 6px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-family: inherit;
       outline: none;
       transition: border-color 0.2s ease;
@@ -454,23 +547,23 @@
 
     .form-textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 80px;
     }
 
     .form-file {
-      padding: 8px;
+      padding: 6px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     .form-file::file-selector-button {
       background-color: var(--button-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border);
-      padding: 6px 12px;
+      padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
-      margin-right: 10px;
+      margin-right: 8px;
       font-weight: 600;
       transition: background-color 0.2s ease;
     }
@@ -480,7 +573,7 @@
     }
 
     .form-hint {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
@@ -488,13 +581,13 @@
       background-color: var(--btn-view-bg);
       color: var(--btn-view-text);
       border: none;
-      padding: 12px;
+      padding: 10px;
       border-radius: 6px;
       font-weight: bold;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       cursor: pointer;
       transition: opacity 0.2s ease, transform 0.1s ease;
-      margin-top: 6px;
+      margin-top: 4px;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -627,6 +720,8 @@
           <div class="meta-tags">
             <div class="tag"><span>Pronouns:</span> Any</div>
             <div class="tag"><span>Sexuality:</span> Pansexual</div>
+            <div class="tag"><span>Age:</span> 18</div>
+            <div class="tag"><span>Time:</span> CDT <span id="live-clock">--:--:--</span></div>
           </div>
         </div>
       </div>
@@ -635,7 +730,6 @@
       <div class="tab-nav">
         <button class="tab-btn active" data-tab="main" onclick="switchTab('main')">Main</button>
         <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ & Pets</button>
-        <button class="tab-btn" data-tab="contact" onclick="switchTab('contact')">Contact Me</button>
       </div>
 
       <!-- TAB 1: MAIN -->
@@ -646,6 +740,7 @@
           <p>• I am very friendly!</p>
           <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
           <p>• Big gamer and loves foxes</p>
+          <p>• Loves Milo’s Sweet Tea 🧋</p>
         </div>
 
         <div class="socials-container">
@@ -739,53 +834,57 @@
         </div>
       </div>
 
-      <!-- TAB 3: CONTACT ME -->
-      <div id="tab-contact" class="tab-panel">
-        <div class="contact-container">
-          <h3>Send Me a Message</h3>
-          
-          <form class="contact-form" action="https://formsubmit.co/simonflourez896@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(this)">
-            
-            <!-- Anti-Spam Honeypot Field (hidden from humans) -->
-            <input type="text" name="_honey" style="display:none">
-            
-            <!-- Disable FormSubmit captcha page redirection for smoother experience -->
-            <input type="hidden" name="_captcha" value="true">
-            
-            <!-- Form Fields -->
-            <div class="form-group">
-              <label for="name">Your Name (Optional)</label>
-              <input type="text" id="name" name="Name" class="form-input" placeholder="Anonymous">
-            </div>
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="contact_info">Email or Discord @ (Optional)</label>
-              <input type="text" id="contact_info" name="Contact_Info" class="form-input" placeholder="e.g. user@email.com or @username">
-              <span class="form-hint">Include this if you want me to reply!</span>
-            </div>
+  <!-- FLOATING PERSISTENT CONTACT BUTTON WITH SMOOTH PHYSICS -->
+  <div class="floating-contact-container" id="floatingContainer">
+    <div class="floating-contact-btn" id="toggleContactBtn" title="Contact Me">
+      <img src="chatIcon.PNG" alt="Contact" onerror="handleImgError(this, 'chatIcon.png')">
+    </div>
+  </div>
 
-            <div class="form-group">
-              <label for="subject">Subject (Optional)</label>
-              <input type="text" id="subject" name="_subject" class="form-input" placeholder="Message subject...">
-            </div>
-
-            <div class="form-group">
-              <label for="message">Message *</label>
-              <textarea id="message" name="Message" class="form-textarea" placeholder="Type your message here..." required></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="attachment">Attachment (Optional)</label>
-              <input type="file" id="attachment" name="Attachment" class="form-file" id="fileInput">
-              <span class="form-hint">Max file size: 25 MB (Gmail limit)</span>
-            </div>
-
-            <button type="submit" class="submit-btn">Send Message</button>
-          </form>
-        </div>
+  <!-- FLOATING CONTACT MODAL POPUP -->
+  <div class="contact-modal" id="contactModal">
+    <div class="modal-header">
+      <h3>Send Me a Message</h3>
+      <button class="close-modal-btn" id="closeContactBtn">&times;</button>
+    </div>
+    
+    <form class="contact-form" action="https://formsubmit.co/simonflourez896@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(this)">
+      
+      <!-- Anti-Spam Honeypot Field -->
+      <input type="text" name="_honey" style="display:none">
+      <input type="hidden" name="_captcha" value="true">
+      
+      <div class="form-group">
+        <label for="name">Your Name (Optional)</label>
+        <input type="text" id="name" name="Name" class="form-input" placeholder="Anonymous">
       </div>
 
-    </div>
+      <div class="form-group">
+        <label for="contact_info">Email or Discord @ (Optional)</label>
+        <input type="text" id="contact_info" name="Contact_Info" class="form-input" placeholder="user@email.com or @username">
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Subject (Optional)</label>
+        <input type="text" id="subject" name="_subject" class="form-input" placeholder="Subject...">
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message *</label>
+        <textarea id="message" name="Message" class="form-textarea" placeholder="Type your message here..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="attachment">Attachment (Optional)</label>
+        <input type="file" id="attachment" name="Attachment" class="form-file">
+        <span class="form-hint">Max file size: 25 MB</span>
+      </div>
+
+      <button type="submit" class="submit-btn">Send Message</button>
+    </form>
   </div>
 
   <script>
@@ -811,6 +910,25 @@
       }, 500);
     });
 
+    // Live CDT Clock Script
+    function updateClock() {
+      const options = {
+        timeZone: 'America/Chicago',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', options);
+      const clockEl = document.getElementById('live-clock');
+      if (clockEl) {
+        clockEl.textContent = timeString;
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
     // Sequential Clean Fade Tab Switcher
     let isTransitioning = false;
 
@@ -824,7 +942,6 @@
 
       isTransitioning = true;
 
-      // Update Tab Button Highlights
       document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.tab === tabId) {
           btn.classList.add('active');
@@ -833,22 +950,18 @@
         }
       });
 
-      // Step 1: Fade out the active panel
       if (currentPanel) {
         currentPanel.classList.remove('active-panel');
 
-        // Step 2: Once faded out, hide current panel and reveal target panel
         setTimeout(() => {
           currentPanel.style.display = 'none';
-
           targetPanel.style.display = 'flex';
           
-          // Trigger browser reflow to ensure smooth fade-in
           void targetPanel.offsetWidth;
 
           targetPanel.classList.add('active-panel');
           isTransitioning = false;
-        }, 200); // Matches the CSS transition duration
+        }, 200);
       } else {
         targetPanel.style.display = 'flex';
         void targetPanel.offsetWidth;
@@ -857,7 +970,20 @@
       }
     }
 
-    // Contact Form Handling (Defaults & File Size Check)
+    // Floating Contact Toggle & Modal
+    const toggleContactBtn = document.getElementById('toggleContactBtn');
+    const closeContactBtn = document.getElementById('closeContactBtn');
+    const contactModal = document.getElementById('contactModal');
+
+    toggleContactBtn.addEventListener('click', () => {
+      contactModal.classList.toggle('active');
+    });
+
+    closeContactBtn.addEventListener('click', () => {
+      contactModal.classList.remove('active');
+    });
+
+    // Contact Form Handling
     function handleFormSubmit(form) {
       const nameInput = form.querySelector('#name');
       if (!nameInput.value.trim()) {
@@ -875,6 +1001,31 @@
 
       return true;
     }
+
+    // Smooth Physics / LERP Following Lag Effect for Floating Button
+    const floatingContainer = document.getElementById('floatingContainer');
+    let targetOffsetY = 0;
+    let currentOffsetY = 0;
+
+    window.addEventListener('scroll', () => {
+      // Create slight dampening offset when scrolling
+      targetOffsetY = Math.sin(window.scrollY * 0.05) * 6;
+    });
+
+    function animateFloatingButton() {
+      // Smooth linear interpolation (LERP)
+      currentOffsetY += (targetOffsetY - currentOffsetY) * 0.08;
+      
+      // Decay target offset back to zero gently
+      targetOffsetY *= 0.95;
+
+      if (floatingContainer) {
+        floatingContainer.style.transform = `translateY(${currentOffsetY}px)`;
+      }
+
+      requestAnimationFrame(animateFloatingButton);
+    }
+    animateFloatingButton();
 
     // Random Sound FX
     const soundBtn = document.getElementById('soundBtn');
