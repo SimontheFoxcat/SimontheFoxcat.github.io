@@ -71,6 +71,7 @@
       pointer-events: none !important;
     }
 
+    /* Overlay Screen */
     #overlay {
       position: fixed;
       top: 0;
@@ -85,6 +86,13 @@
       align-items: center;
       transition: opacity 0.5s ease, visibility 0.5s ease;
       touch-action: manipulation;
+    }
+
+    .overlay-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
     }
 
     .click-btn {
@@ -104,6 +112,42 @@
 
     .click-btn:active {
       transform: scale(0.97);
+    }
+
+    .overlay-music-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .mute-toggle-btn {
+      background-color: var(--button-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mute-toggle-btn:hover {
+      background-color: var(--button-hover);
+    }
+
+    .mute-toggle-btn.muted {
+      background-color: #4a2118;
+      border-color: #733324;
+      color: #ffb3a3;
     }
 
     .container {
@@ -414,7 +458,7 @@
       background-color: var(--button-hover);
     }
 
-    /* Floating Contact Button (Square with Rounded Edges & Lighter Swatch Color) */
+    /* Floating Contact Button */
     .floating-contact-container {
       position: fixed;
       bottom: 25px;
@@ -426,8 +470,8 @@
     .floating-contact-btn {
       width: 58px;
       height: 58px;
-      border-radius: 14px; /* Square with rounded edges */
-      background-color: var(--btn-view-bg); /* Lighter shade from color palette */
+      border-radius: 14px;
+      background-color: var(--btn-view-bg);
       border: 2px solid var(--card-border);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
       display: flex;
@@ -690,8 +734,16 @@
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
+  <!-- STARTUP OVERLAY -->
   <div id="overlay">
-    <button class="click-btn" id="enterBtn">Click to View Profile :3</button>
+    <div class="overlay-content">
+      <button class="click-btn" id="enterBtn">Click to View Profile :3</button>
+      
+      <div class="overlay-music-row">
+        <span>Will play music!</span>
+        <button id="overlayMuteBtn" class="mute-toggle-btn" type="button">🔊 Sound On</button>
+      </div>
+    </div>
   </div>
 
   <div class="container">
@@ -740,7 +792,7 @@
           <p>• I am very friendly!</p>
           <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
           <p>• Big gamer and loves foxes</p>
-          <p>• Loves Milo’s Sweet Tea 🧋</p>
+          <p>• Loves Milo’s Sweet Tea</p>
         </div>
 
         <div class="socials-container">
@@ -853,7 +905,6 @@
     
     <form class="contact-form" action="https://formsubmit.co/simonflourez896@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(this)">
       
-      <!-- Anti-Spam Field -->
       <input type="text" name="_honey" style="display:none">
       <input type="hidden" name="_captcha" value="true">
       
@@ -891,16 +942,36 @@
     // Prevent right clicks
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // Enter Button & Overlay
+    // Enter Button, Mute Toggle & Overlay
     const enterBtn = document.getElementById('enterBtn');
+    const overlayMuteBtn = document.getElementById('overlayMuteBtn');
     const overlay = document.getElementById('overlay');
     const audio = document.getElementById('siteAudio');
+
+    let isMuted = false;
+
+    // Toggle Mute on Overlay
+    overlayMuteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isMuted = !isMuted;
+      audio.muted = isMuted;
+
+      if (isMuted) {
+        overlayMuteBtn.textContent = '🔇 Muted';
+        overlayMuteBtn.classList.add('muted');
+      } else {
+        overlayMuteBtn.textContent = '🔊 Sound On';
+        overlayMuteBtn.classList.remove('muted');
+      }
+    });
 
     enterBtn.addEventListener('click', () => {
       window.scrollTo(0, 0);
       document.body.classList.remove('no-scroll');
 
-      audio.play().catch(err => console.log("Audio play blocked:", err));
+      if (!isMuted) {
+        audio.play().catch(err => console.log("Audio play blocked:", err));
+      }
 
       overlay.style.opacity = '0';
       overlay.style.visibility = 'hidden';
@@ -1013,13 +1084,11 @@
       const deltaScroll = currentScroll - lastScrollY;
       lastScrollY = currentScroll;
 
-      // Impart physical momentum upward/downward based on scroll speed
       const clampedDelta = Math.max(Math.min(deltaScroll, 60), -60);
       velocityY -= clampedDelta * 0.35;
     });
 
     function animatePhysics() {
-      // Spring physics aiming back towards resting position (0)
       const stiffness = 0.08;
       const damping = 0.82;
 
