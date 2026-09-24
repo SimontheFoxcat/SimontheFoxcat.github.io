@@ -337,7 +337,7 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .bio-box p {
@@ -416,6 +416,118 @@
       color: var(--text-main);
       font-size: 0.9rem;
       letter-spacing: 0.3px;
+    }
+
+    /* GALLERY GRID & CARDS */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .art-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .art-thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      background-color: var(--inner-box-bg);
+      border: 1px solid var(--inner-box-border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .art-thumb:hover {
+      border-color: var(--btn-view-bg);
+      transform: translateY(-2px);
+    }
+
+    .art-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .art-artist {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      word-break: break-word;
+    }
+
+    .art-artist span {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* LIGHTBOX ZOOM MODAL */
+    .lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      background-color: rgba(10, 6, 4, 0.92);
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+      touch-action: manipulation;
+    }
+
+    .lightbox-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      object-fit: contain;
+      pointer-events: auto !important;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 2.2rem;
+      color: var(--text-main);
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+      padding: 8px;
+      transition: color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .lightbox-close:hover {
+      color: var(--btn-view-bg);
     }
 
     /* SOCIALS GRID */
@@ -893,11 +1005,34 @@
       <!-- TAB 3: GALLARY -->
       <div id="tab-gallary" class="tab-panel">
         <div class="gallery-box">
-          <p style="text-align: center; color: var(--text-muted); font-weight: 500; padding: 20px 0;">Nothing here yet!</p>
+          <h3>🎨 Artwork Gallery</h3>
+          <div class="gallery-grid">
+            
+            <div class="art-card">
+              <div class="art-thumb" onclick="openLightbox('artwork1.PNG', 'artwork1.png')">
+                <img src="artwork1.PNG" alt="Artwork 1" onerror="handleImgError(this, 'artwork1.png')">
+              </div>
+              <div class="art-artist">Artist: <span>@idiot07062</span></div>
+            </div>
+
+            <div class="art-card">
+              <div class="art-thumb" onclick="openLightbox('artwork2.PNG', 'artwork2.png')">
+                <img src="artwork2.PNG" alt="Artwork 2" onerror="handleImgError(this, 'artwork2.png')">
+              </div>
+              <div class="art-artist">Artist: <span>@kabukicomk</span></div>
+            </div>
+
+          </div>
         </div>
       </div>
 
     </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL FOR ARTWORK ZOOM -->
+  <div id="lightboxModal" class="lightbox-modal">
+    <button class="lightbox-close" id="closeLightboxBtn">&times;</button>
+    <img id="lightboxImg" class="lightbox-img" src="" alt="Enlarged Artwork">
   </div>
 
   <!-- FLOATING PERSISTENT CONTACT BUTTON -->
@@ -1051,6 +1186,30 @@
         isTransitioning = false;
       }
     }
+
+    // LIGHTBOX / ZOOM SCRIPT
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
+    function openLightbox(src, fallbackSrc) {
+      lightboxImg.src = src;
+      lightboxImg.onerror = function() {
+        handleImgError(lightboxImg, fallbackSrc);
+      };
+      lightboxModal.classList.add('active');
+    }
+
+    function closeLightbox() {
+      lightboxModal.classList.remove('active');
+    }
+
+    closeLightboxBtn.addEventListener('click', closeLightbox);
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target === lightboxModal || e.target === closeLightboxBtn) {
+        closeLightbox();
+      }
+    });
 
     // Floating Contact Toggle & Modal
     const toggleContactBtn = document.getElementById('toggleContactBtn');
