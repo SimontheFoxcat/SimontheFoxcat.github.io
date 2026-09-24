@@ -322,7 +322,7 @@
       opacity: 1;
     }
 
-    .bio-box, .faq-container, .pet-showcase {
+    .bio-box, .faq-container, .pet-showcase, .gallery-box {
       width: 100%;
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
@@ -332,7 +332,7 @@
       line-height: 1.5;
     }
 
-    .bio-box h3, .faq-container h3, .pet-showcase h3 {
+    .bio-box h3, .faq-container h3, .pet-showcase h3, .gallery-box h3 {
       font-size: 0.75rem;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -473,8 +473,8 @@
     .floating-contact-btn {
       width: 58px;
       height: 58px;
-      border-radius: 14px; /* Square with rounded edges */
-      background-color: var(--btn-view-bg); /* Lighter shade from palette */
+      border-radius: 14px;
+      background-color: var(--btn-view-bg);
       border: 2px solid var(--card-border);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
       display: flex;
@@ -785,6 +785,7 @@
       <div class="tab-nav">
         <button class="tab-btn active" data-tab="main" onclick="switchTab('main')">Main</button>
         <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ & Pets</button>
+        <button class="tab-btn" data-tab="gallary" onclick="switchTab('gallary')">Gallary</button>
       </div>
 
       <!-- TAB 1: MAIN -->
@@ -852,7 +853,7 @@
               <div class="faq-a">Sure! I am quite shy though so I might not put off much energy at first.</div>
             </div>
             <div class="faq-item">
-              <div class="faq-q">Can I draw fan art of your Original Characters (OCs)?</div>
+              <div class="faq-q">Can I draw art of your Original Character (OC)?</div>
               <div class="faq-a">YES :D</div>
             </div>
             <div class="faq-item">
@@ -886,6 +887,13 @@
               <div class="pet-name">Tipsy</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: GALLARY -->
+      <div id="tab-gallary" class="tab-panel">
+        <div class="gallery-box">
+          <p style="text-align: center; color: var(--text-muted); font-weight: 500; padding: 20px 0;">Nothing here yet!</p>
         </div>
       </div>
 
@@ -1088,12 +1096,9 @@
       const delta = scrollY - lastScrollY;
       lastScrollY = scrollY;
 
-      // Scrolling down lags icon upward (negative Y), scrolling up lags icon downward
-      // Clamp delta so aggressive fast scrolls don't push icon off-screen
       const clampedDelta = Math.max(Math.min(delta, 45), -45);
       targetY = -clampedDelta * 0.7;
 
-      // Reset target back to 0 once scrolling pauses/stops
       clearTimeout(scrollStopTimer);
       scrollStopTimer = setTimeout(() => {
         targetY = 0;
@@ -1101,11 +1106,9 @@
     }, { passive: true });
 
     function renderSmoothScroll() {
-      // Silky linear interpolation (lerp) towards target
       currentY += (targetY - currentY) * 0.12;
 
       if (floatingContainer) {
-        // translate3d forces hardware GPU rendering for 60-120fps motion
         floatingContainer.style.transform = `translate3d(0, ${currentY.toFixed(2)}px, 0)`;
       }
 
