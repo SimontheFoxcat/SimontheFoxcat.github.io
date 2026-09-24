@@ -71,7 +71,7 @@
       pointer-events: none !important;
     }
 
-    /* Overlay Screen */
+    /* STARTUP OVERLAY SCREEN */
     #overlay {
       position: fixed;
       top: 0;
@@ -274,7 +274,7 @@
       color: var(--text-muted);
     }
 
-    /* Tab Navigation */
+    /* TAB NAVIGATION */
     .tab-nav {
       display: flex;
       gap: 8px;
@@ -309,7 +309,7 @@
       border-color: var(--btn-view-bg);
     }
 
-    /* Tab Panels */
+    /* TAB PANELS */
     .tab-panel {
       display: none;
       opacity: 0;
@@ -348,7 +348,7 @@
       margin-bottom: 0;
     }
 
-    /* FAQ List */
+    /* FAQ LIST */
     .faq-list {
       display: flex;
       flex-direction: column;
@@ -375,7 +375,7 @@
       line-height: 1.4;
     }
 
-    /* Pet Gallery Showcase */
+    /* PET GALLERY SHOWCASE */
     .pet-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -418,7 +418,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Socials Grid */
+    /* SOCIALS GRID */
     .socials-container {
       background-color: var(--inner-box-bg);
       border: 1px solid var(--inner-box-border);
@@ -458,20 +458,23 @@
       background-color: var(--button-hover);
     }
 
-    /* Floating Contact Button */
+    /* GPU-ACCELERATED FLOATING CONTACT BUTTON */
     .floating-contact-container {
       position: fixed;
       bottom: 25px;
       right: 25px;
       z-index: 1000;
       will-change: transform;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
     .floating-contact-btn {
       width: 58px;
       height: 58px;
-      border-radius: 14px;
-      background-color: var(--btn-view-bg);
+      border-radius: 14px; /* Square with rounded edges */
+      background-color: var(--btn-view-bg); /* Lighter shade from palette */
       border: 2px solid var(--card-border);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
       display: flex;
@@ -495,7 +498,7 @@
       object-fit: contain;
     }
 
-    /* Contact Popup Modal */
+    /* CONTACT POPUP MODAL */
     .contact-modal {
       position: fixed;
       bottom: 95px;
@@ -1073,37 +1076,42 @@
       return true;
     }
 
-    // Dynamic Physics Drag-Behind & Spring Settle Effect
+    // GPU-ACCELERATED SILKY SMOOTH TRAILING & SETTLE EFFECT
     const floatingContainer = document.getElementById('floatingContainer');
-    let offsetY = 0;
-    let velocityY = 0;
+    let targetY = 0;
+    let currentY = 0;
     let lastScrollY = window.scrollY;
+    let scrollStopTimer = null;
 
     window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      const deltaScroll = currentScroll - lastScrollY;
-      lastScrollY = currentScroll;
+      const scrollY = window.scrollY;
+      const delta = scrollY - lastScrollY;
+      lastScrollY = scrollY;
 
-      const clampedDelta = Math.max(Math.min(deltaScroll, 60), -60);
-      velocityY -= clampedDelta * 0.35;
-    });
+      // Scrolling down lags icon upward (negative Y), scrolling up lags icon downward
+      // Clamp delta so aggressive fast scrolls don't push icon off-screen
+      const clampedDelta = Math.max(Math.min(delta, 45), -45);
+      targetY = -clampedDelta * 0.7;
 
-    function animatePhysics() {
-      const stiffness = 0.08;
-      const damping = 0.82;
+      // Reset target back to 0 once scrolling pauses/stops
+      clearTimeout(scrollStopTimer);
+      scrollStopTimer = setTimeout(() => {
+        targetY = 0;
+      }, 50);
+    }, { passive: true });
 
-      const springForce = -stiffness * offsetY;
-      velocityY += springForce;
-      velocityY *= damping;
-      offsetY += velocityY;
+    function renderSmoothScroll() {
+      // Silky linear interpolation (lerp) towards target
+      currentY += (targetY - currentY) * 0.12;
 
       if (floatingContainer) {
-        floatingContainer.style.transform = `translateY(${offsetY.toFixed(2)}px)`;
+        // translate3d forces hardware GPU rendering for 60-120fps motion
+        floatingContainer.style.transform = `translate3d(0, ${currentY.toFixed(2)}px, 0)`;
       }
 
-      requestAnimationFrame(animatePhysics);
+      requestAnimationFrame(renderSmoothScroll);
     }
-    requestAnimationFrame(animatePhysics);
+    requestAnimationFrame(renderSmoothScroll);
 
     // Random Sound FX
     const soundBtn = document.getElementById('soundBtn');
