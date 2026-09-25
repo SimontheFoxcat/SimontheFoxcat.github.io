@@ -12,6 +12,8 @@
       --bg-gradient-end: #120b07;
       --card-bg: #2a1c14;
       --card-border: #523a2a;
+      --gold-accent: #dcb892;
+      --gold-glow: rgba(220, 184, 146, 0.35);
       --inner-box-bg: #1d130d;
       --inner-box-border: #3d2a1d;
       --text-main: #e8d8c8;
@@ -39,14 +41,15 @@
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #120b07 !important;
-      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      background: radial-gradient(circle at 50% 20%, var(--bg-gradient-start), var(--bg-gradient-end));
       color: var(--text-main);
       min-height: 100vh;
       min-height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 10px;
+      padding: 30px 12px;
+      position: relative;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
@@ -104,8 +107,8 @@
       font-weight: bold;
       letter-spacing: 1px;
       cursor: pointer;
-      border-radius: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--gold-glow);
       transition: transform 0.2s ease, background-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -136,12 +139,8 @@
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
+      transition: background-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
-    }
-
-    .mute-toggle-btn:hover {
-      background-color: var(--button-hover);
     }
 
     .mute-toggle-btn.muted {
@@ -150,15 +149,30 @@
       color: #ffb3a3;
     }
 
+    /* MAIN CONTAINER WITH GOLDEN GLOW */
     .container {
       width: 100%;
       max-width: 600px;
       background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
+      border: 1px solid var(--gold-accent);
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       padding-bottom: 20px;
+      position: relative;
+      animation: goldPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes goldPulse {
+      0% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6),
+                    0 0 15px rgba(220, 184, 146, 0.15);
+        border-color: #523a2a;
+      }
+      100% {
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.85),
+                    0 0 32px rgba(220, 184, 146, 0.35);
+        border-color: var(--gold-accent);
+      }
     }
 
     .banner-container {
@@ -200,7 +214,6 @@
     .pfp-container {
       width: 85px;
       height: 85px;
-      min-width: 85px;
       border-radius: 50%;
       background-color: #4a3729;
       border: 2px solid var(--card-border);
@@ -208,6 +221,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .pfp-container img {
@@ -334,10 +348,13 @@
 
     .bio-box h3, .faq-container h3, .pet-showcase h3, .gallery-box h3 {
       font-size: 0.75rem;
-      color: var(--text-muted);
+      color: var(--gold-accent);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .bio-box p {
@@ -418,7 +435,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* GALLERY GRID & CARDS */
+    /* GALLERY GRID */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -449,14 +466,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      position: relative;
-      transition: border-color 0.2s ease, transform 0.2s ease;
       -webkit-tap-highlight-color: transparent;
-    }
-
-    .art-thumb:hover {
-      border-color: var(--btn-view-bg);
-      transform: translateY(-2px);
     }
 
     .art-thumb img {
@@ -491,7 +501,6 @@
       align-items: center;
       opacity: 0;
       transition: opacity 0.25s ease;
-      backdrop-filter: blur(6px);
       padding: 20px;
       touch-action: manipulation;
     }
@@ -505,7 +514,7 @@
       max-width: 90vw;
       max-height: 85vh;
       border-radius: 8px;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--gold-accent);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
       object-fit: contain;
       pointer-events: auto !important;
@@ -570,7 +579,7 @@
       background-color: var(--button-hover);
     }
 
-    /* GPU-ACCELERATED FLOATING CONTACT BUTTON */
+    /* FLOATING CONTACT BUTTON */
     .floating-contact-container {
       position: fixed;
       bottom: 25px;
@@ -593,15 +602,14 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+      transition: transform 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       overflow: hidden;
       padding: 10px;
     }
 
     .floating-contact-btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+      transform: scale(1.05);
     }
 
     .floating-contact-btn img {
@@ -618,15 +626,15 @@
       width: calc(100vw - 40px);
       max-width: 380px;
       background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--gold-accent);
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
       z-index: 1001;
       display: none;
       opacity: 0;
-      transform: translateY(15px) scale(0.95);
-      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translateY(15px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
       max-height: 80vh;
       overflow-y: auto;
     }
@@ -634,7 +642,7 @@
     .contact-modal.active {
       display: block;
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
     .modal-header {
@@ -648,7 +656,7 @@
 
     .modal-header h3 {
       font-size: 0.85rem;
-      color: var(--text-main);
+      color: var(--gold-accent);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -724,11 +732,6 @@
       cursor: pointer;
       margin-right: 8px;
       font-weight: 600;
-      transition: background-color 0.2s ease;
-    }
-
-    .form-file::file-selector-button:hover {
-      background-color: var(--button-hover);
     }
 
     .form-hint {
@@ -745,17 +748,13 @@
       font-weight: bold;
       font-size: 0.88rem;
       cursor: pointer;
-      transition: opacity 0.2s ease, transform 0.1s ease;
+      transition: opacity 0.2s ease;
       margin-top: 4px;
       -webkit-tap-highlight-color: transparent;
     }
 
     .submit-btn:hover {
       opacity: 0.9;
-    }
-
-    .submit-btn:active {
-      transform: scale(0.98);
     }
 
     .sound-container {
@@ -777,7 +776,7 @@
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      transition: background-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       width: 100%;
       max-width: 200px;
@@ -785,10 +784,6 @@
 
     .sound-btn:hover {
       background-color: var(--button-hover);
-    }
-
-    .sound-btn:active {
-      transform: scale(0.96);
     }
 
     .more-soon-container {
@@ -815,7 +810,7 @@
 
     .credits-title {
       font-size: 0.7rem;
-      color: var(--text-muted);
+      color: var(--gold-accent);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-weight: 600;
@@ -861,6 +856,7 @@
     </div>
   </div>
 
+  <!-- MAIN CONTAINER WITH GOLDEN GLOW -->
   <div class="container">
     <div class="banner-container">
       <img src="banner.JPG" alt="Banner" onerror="handleImgError(this, 'banner.jpg')">
@@ -903,7 +899,7 @@
       <!-- TAB 1: MAIN -->
       <div id="tab-main" class="tab-panel active-panel" style="display: flex;">
         <div class="bio-box">
-          <h3>About Me</h3>
+          <h3>✦ About Me</h3>
           <p>• Busy working a lot.</p>
           <p>• I am very friendly!</p>
           <p>• I am usually learning guitar, drawing, and coding in my spare time (mostly gaming tho)</p>
@@ -935,7 +931,7 @@
         </div>
 
         <div class="credits-box">
-          <div class="credits-title">Credits</div>
+          <div class="credits-title">✦ Credits</div>
           <div class="credit-row">
             <span>Profile Picture</span>
             <span class="credit-tag">@idiot07062</span>
@@ -950,7 +946,7 @@
       <!-- TAB 2: FAQ & PETS -->
       <div id="tab-faq" class="tab-panel">
         <div class="faq-container">
-          <h3>Frequently Asked Questions</h3>
+          <h3>✦ Frequently Asked Questions</h3>
           <div class="faq-list">
             <div class="faq-item">
               <div class="faq-q">Where are you based?</div>
@@ -1243,7 +1239,7 @@
       return true;
     }
 
-    // GPU-ACCELERATED SILKY SMOOTH TRAILING & SETTLE EFFECT
+    // GPU-ACCELERATED TRAILING & SETTLE EFFECT FOR CONTACT BTN
     const floatingContainer = document.getElementById('floatingContainer');
     let targetY = 0;
     let currentY = 0;
