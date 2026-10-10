@@ -173,7 +173,7 @@ const artEmpty = document.getElementById('art-empty');
 const loadedArtwork = new Map();
 let artworkScanning = false;
 
-function loadArtwork(number) {
+function loadArtworkFile(number, extension) {
   return new Promise(resolve => {
     const image = new Image();
     let finished = false;
@@ -188,8 +188,16 @@ function loadArtwork(number) {
     image.onload = () => finish(image);
     image.onerror = () => finish(null);
     timeout = setTimeout(() => finish(null), 6000);
-    image.src = 'artwork' + number + '.PNG?check=' + Date.now();
+    image.src = 'artwork' + number + '.' + extension + '?check=' + Date.now();
   });
+}
+
+async function loadArtwork(number) {
+  for (const extension of ['PNG', 'png']) {
+    const image = await loadArtworkFile(number, extension);
+    if (image) return image;
+  }
+  return null;
 }
 
 function showArtwork(number, image) {
