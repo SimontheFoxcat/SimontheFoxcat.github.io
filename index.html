@@ -76,6 +76,9 @@ body{background-image:linear-gradient(#0007,#0007),linear-gradient(#ddaf820b 1px
 .portrait-frame{grid-column:1;grid-row:1 / span 2}.profile-details{grid-column:2;min-width:0}.profile-details h1{margin-bottom:0}.discord-handle{margin:6px 0 0;font-size:13px;line-height:1.4;opacity:.55;overflow-wrap:anywhere;animation:content-arrive .7s .3s var(--ease-out) backwards}.tags{grid-column:2;min-width:0}.tags>div{max-width:100%;flex-wrap:wrap}.tags dt,.tags dd{flex-shrink:0}.tags .time-tag dd{display:flex;align-items:center;flex-wrap:wrap;gap:3px;flex-shrink:1}.tags .tag-divider{margin:0 3px}.tags #dst-label{margin-left:0}.tags .orientation dd{white-space:nowrap}
 .saveable-media{-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}.saveable-media:after{display:none}.saveable-media img{pointer-events:auto;-webkit-user-select:auto;user-select:auto;-webkit-touch-callout:default;-webkit-user-drag:auto}.viewer-actions{display:flex;align-items:center;gap:14px}.refsheet-save{font-size:12px;color:#ddaf82;padding:5px 0;border-bottom:1px solid #967654}.refsheet-save[hidden]{display:none}
 @media(max-width:600px){.portrait-frame{grid-row:1}.profile-details h1{margin-bottom:0}.discord-handle{font-size:12px}.tags{grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tags>div{font-size:12px;padding:8px 10px;gap:6px}.tags>div:nth-child(3){order:1}.tags .orientation{order:2;grid-column:1 / -1}.tags .time-tag{order:3;grid-column:1 / -1}.profile-intro{row-gap:16px}.viewer-heading{gap:12px}.viewer-actions{gap:10px}.refsheet-save{font-size:11px}}
+
+.art-grid{--art-card-width:clamp(210px,32vw,260px);--art-image-height:calc((var(--art-card-width) - 14px) * 1.25);align-items:flex-start}.art-card{flex-basis:var(--art-card-width);width:var(--art-card-width)}.art-photo{height:var(--art-image-height);aspect-ratio:auto}.art-card.refsheet-card{flex-basis:calc(var(--art-image-height) * var(--refsheet-ratio) + 14px);width:calc(var(--art-image-height) * var(--refsheet-ratio) + 14px)}
+@media(max-width:600px){.art-grid{--art-card-width:min(75vw,260px)}}
 </style>
 </head>
 <body>
@@ -115,7 +118,7 @@ body{background-image:linear-gradient(#0007,#0007),linear-gradient(#ddaf820b 1px
         </ul>
       </section>
       <div class="sound-control" id="sounds">
-        <button class="sound-button" type="button" id="sound-button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 2 9 6-9 6Z" fill="currentColor"/></svg><span id="button-label">Play a random sound</span></button>
+        <button class="sound-button" type="button" id="sound-button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 2 9 6-9 6Z" fill="currentColor"/></svg><span id="button-label">Fop button :3</span></button>
       </div>
     </div>
 
@@ -131,7 +134,7 @@ body{background-image:linear-gradient(#0007,#0007),linear-gradient(#ddaf820b 1px
     <footer class="credits" id="credits">
       <img class="emoji emoji-three" data-image="emoji-3" src="emoji3.PNG" draggable="false" alt="Sleepy moon emoji">
       <h2>Credits</h2>
-      <div class="credit-lines"><p>PFP: <strong>@idiot07062</strong></p><p>Emojis: <strong>@cruciblestyx</strong></p></div>
+      <div class="credit-lines"><p>PFP: <strong>@idiot07062</strong></p><p>Emojis: <strong>@cruciblestyx</strong></p><p>Ref Sheet: <strong>@mockapup</strong></p></div>
     </footer>
   </div>
 </main>
@@ -174,7 +177,7 @@ button.addEventListener('click', async () => {
   try {
     await player.play();
   } catch (error) {
-    if (currentRequest === requestId) button.setAttribute('aria-label', 'Play a random sound. Audio could not play; try again.');
+    if (currentRequest === requestId) button.setAttribute('aria-label', 'Fop button :3. Audio could not play; try again.');
   }
 });
 for (const event of ['contextmenu', 'copy', 'cut', 'dragstart', 'selectstart']) {
@@ -224,7 +227,8 @@ function showArtwork(number, image) {
   const isRefsheet = number === 0;
   const title = isRefsheet ? 'Reference sheet' : 'Artwork ' + number;
   const figure = document.createElement('figure');
-  figure.className = 'art-card';
+  figure.className = 'art-card' + (isRefsheet ? ' refsheet-card' : '');
+  if (isRefsheet) figure.style.setProperty('--refsheet-ratio', String(image.naturalWidth / image.naturalHeight));
   figure.dataset.artwork = number;
   const frame = document.createElement('div');
   frame.className = 'protected-media art-photo' + (isRefsheet ? ' saveable-media' : '');
@@ -301,10 +305,14 @@ function updateArtControls() {
 }
 
 function scrollArtwork(direction) {
-  const card = artGallery.querySelector('.art-card');
-  const distance = card ? card.getBoundingClientRect().width + 16 : 260;
+  const current = artGallery.scrollLeft;
+  const left = artGallery.getBoundingClientRect().left;
+  const positions = [...artGallery.children].map(card => card.getBoundingClientRect().left - left + current);
+  const target = direction > 0
+    ? positions.find(position => position > current + 2) ?? artGallery.scrollWidth - artGallery.clientWidth
+    : positions.reverse().find(position => position < current - 2) ?? 0;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  artGallery.scrollBy({left: direction * distance, behavior: reducedMotion ? 'auto' : 'smooth'});
+  artGallery.scrollBy({left: target - current, behavior: reducedMotion ? 'auto' : 'smooth'});
 }
 
 function openArtwork(number, source, opener) {
